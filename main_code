@@ -1,0 +1,40 @@
+import scrapetube
+from pytube import YouTube
+from time import sleep
+
+def Download(link):
+    youtubeObject = YouTube(link)
+    youtubeObject = youtubeObject.streams.get_highest_resolution()
+    try:
+        youtubeObject.download()
+    except:
+        print("An error has occurred! Trying again..")
+        sleep(120)
+        try:
+            youtubeObject.download()
+        except:
+            print('Failed to download!')
+    print("Download is completed successfully")
+
+channel_id = input('Enter channel id: ')
+# channel_id = 'UCCpZ1Y4WjNlbFlnQy7nkE_g'
+videos = scrapetube.get_channel(channel_id)
+
+for video in videos:
+    vdo_id = video['videoId']
+    vdo_link = 'https://www.youtube.com/watch?v='+vdo_id
+    try:
+        print('Downloading video: ' + vdo_link)
+        Download(vdo_link)
+    except:
+        sleep(120)
+        try:
+            print('Downloading video: ' + vdo_link)
+            Download(vdo_link)
+        except:
+            sleep(180)
+            try:
+                print('Downloading video: ' + vdo_link)
+                Download(vdo_link)
+            except:
+                pass
